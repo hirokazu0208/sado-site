@@ -38,26 +38,29 @@
     <main class="relative min-h-screen flex flex-col justify-center items-center px-4 overflow-hidden">
         
         <video id="hero-video" autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover z-0 opacity-0">
-            <source src="file:///Users/hirokazukamidozono/Documents/システム開発/茶道/ura_tankosya.mp4" type="video/mp4">
+            <!-- 💡 GitHub Pages公開用に、PCローカルパスから相対パスに修正 -->
+            <source src="ura_tankosya.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
 
         <div class="absolute inset-0 bg-gradient-to-tr from-[#f4f3ef]/85 via-[#eae6df]/70 to-[#e6ebe0]/80 backdrop-blur-[2px] z-10"></div>
 
-        <div class="relative z-20 flex flex-col items-center select-none w-full max-w-xl">
+        <div class="relative z-20 flex flex-col items-center select-none w-full max-w-xl min-h-[600px] justify-center">
             
             <p id="hero-sub" class="text-[10px] md:text-xs uppercase tracking-[0.4em] text-[#61645c] mb-12 opacity-0 text-center">
-                </p>
+            </p>
             
-            <div id="hero-main-container" class="my-4 min-h-[350px] flex items-center justify-center">
+            <!-- 💡 GSAPでの移動を滑らかにするため、初期状態をabsolute中央配置としてマークアップを調律 -->
+            <div id="hero-main-container" class="my-4 min-h-[350px] flex items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 origin-center">
                 <h1 id="hero-main" class="text-3xl md:text-4xl font-extralight [writing-mode:vertical-rl] tracking-[0.5em] leading-loose opacity-0">
                 </h1>
             </div>
             
-            <div id="hero-line" class="w-[1px] h-0 bg-[#2c2c2a] opacity-30 mx-auto my-8"></div>
-            
-            <p id="hero-desc" class="text-xs md:text-sm font-light tracking-[0.2em] text-[#41433f] leading-loose opacity-0 text-center mt-4">
-                </p>
+            <!-- 縦書き見出しが移動した後に綺麗に残るよう、ラインと説明文の配置を維持 -->
+            <div class="pt-[400px] flex flex-col items-center">
+                <div id="hero-line" class="w-[1px] h-0 bg-[#2c2c2a] opacity-30 mx-auto my-8"></div>
+                <p id="hero-desc" class="text-xs md:text-sm font-light tracking-[0.2em] text-[#41433f] leading-loose opacity-0 text-center mt-4"></p>
+            </div>
         </div>
 
         <div id="scroll-text" class="absolute bottom-12 left-1/2 -translate-x-1/2 z-20 text-[9px] tracking-[0.3em] uppercase opacity-40">
@@ -142,32 +145,21 @@
                 }
             });
 
-            // 💡【修正箇所】縦書き見出し（#hero-main-container）の右上移動とフェードアウト制御
+            // 💡縦書き見出し（#hero-main-container）の右上移動とフェードアウト制御
+            // 初期中央配置のクラス競合を防ぎ、滑らかに右上（x:0, y:0基準）へシフトさせます
             gsap.timeline()
               .to("#hero-main-container", {
-                // 1. 最初は中央（Flexboxで配置されている状態）の現在位置を固定して固定レイアウトに変更する
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                xPercent: -50,
-                yPercent: -50,
-                transformOrigin: "center center",
-                duration: 0
-              })
-              .to("#hero-main-container", {
-                // 2. 5秒後に右上端へ移動（ヘッダー等の位置レイアウトと干渉しないように固定値調整）
-                top: "140px",              // 右上の適切な位置（ヘッダーの下あたり）
+                top: "140px",              
                 left: "auto",
                 right: "32px",
-                xPercent: 0,
-                yPercent: 0,
-                scale: 0.7,                // 右上に移動した際に、少し小さく（美しく）する調律
-                duration: 2.5,             // 2.5秒かけて滑らかに移動
+                x: 0,
+                y: 0,
+                scale: 0.7,                
+                duration: 2.5,             
                 ease: "power3.inOut",
-                delay: 5.0                 // 5秒後スタート
+                delay: 5.0                 
               })
               .to("#hero-main-container", {
-                // 3. 移動完了からさらに12.5秒後（トータル20秒後）にフェードアウト
                 opacity: 0,
                 duration: 1.5,
                 ease: "power2.out",
