@@ -37,26 +37,25 @@
 
     <main class="relative min-h-screen flex flex-col justify-center items-center px-4 overflow-hidden">
         
-        <video id="hero-video" autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-cover z-0 opacity-0">
-            <!-- 💡 GitHub Pages公開用に、PCローカルパスから相対パスに修正 -->
+        <!-- 💡 スマホ環境（iPhone 14 Proなど）での見え方を調整：デフォルトを object-contain に、PC（md:）以上を object-cover に分離 -->
+        <video id="hero-video" autoplay loop muted playsinline class="absolute inset-0 w-full h-full object-contain md:object-cover z-0 opacity-0 max-w-full max-h-screen mx-auto">
             <source src="ura_tankosya.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
 
-        <div class="absolute inset-0 bg-gradient-to-tr from-[#f4f3ef]/85 via-[#eae6df]/70 to-[#e6ebe0]/80 backdrop-blur-[2px] z-10"></div>
+        <!-- 💡 背景グラデーションが動画の境界線と自然に馴染むように調整 -->
+        <div class="absolute inset-0 bg-gradient-to-tr from-[#f4f3ef]/90 via-[#eae6df]/75 to-[#e6ebe0]/85 backdrop-blur-[1px] z-10"></div>
 
         <div class="relative z-20 flex flex-col items-center select-none w-full max-w-xl min-h-[600px] justify-center">
             
             <p id="hero-sub" class="text-[10px] md:text-xs uppercase tracking-[0.4em] text-[#61645c] mb-12 opacity-0 text-center">
             </p>
             
-            <!-- 💡 GSAPでの移動を滑らかにするため、初期状態をabsolute中央配置としてマークアップを調律 -->
             <div id="hero-main-container" class="my-4 min-h-[350px] flex items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 origin-center">
                 <h1 id="hero-main" class="text-3xl md:text-4xl font-extralight [writing-mode:vertical-rl] tracking-[0.5em] leading-loose opacity-0">
                 </h1>
             </div>
             
-            <!-- 縦書き見出しが移動した後に綺麗に残るよう、ラインと説明文の配置を維持 -->
             <div class="pt-[400px] flex flex-col items-center">
                 <div id="hero-line" class="w-[1px] h-0 bg-[#2c2c2a] opacity-30 mx-auto my-8"></div>
                 <p id="hero-desc" class="text-xs md:text-sm font-light tracking-[0.2em] text-[#41433f] leading-loose opacity-0 text-center mt-4"></p>
@@ -97,9 +96,6 @@
     </section>
 
     <script>
-        // ==========================================
-        // 禅語データ
-        // ==========================================
         const ZEN_WORDS = [
             {
                 sub: "The green mountains become greener after the rain",
@@ -129,14 +125,12 @@
                 document.getElementById('hero-desc').innerHTML = currentData.desc;
             }
 
-            // 初期のインラインフェードインアニメーション
             const tl = gsap.timeline();
             tl.to("#hero-sub", { opacity: 1, y: 0, duration: 1.2, ease: "power3.out", delay: 0.5 })
               .to("#hero-main", { opacity: 1, duration: 1.8, ease: "power2.out" }, "-=0.6")
               .to("#hero-line", { height: "64px", duration: 1.2, ease: "power2.inOut" }, "-=1.2")
               .to("#hero-desc", { opacity: 1, y: 0, duration: 1.4, ease: "power3.out" }, "-=0.4");
 
-            // 5秒後に動画を再生開始しフェードイン
             gsap.delayedCall(5.0, () => {
                 const video = document.getElementById('hero-video');
                 if (video) {
@@ -145,8 +139,7 @@
                 }
             });
 
-            // 💡縦書き見出し（#hero-main-container）の右上移動とフェードアウト制御
-            // 初期中央配置のクラス競合を防ぎ、滑らかに右上（x:0, y:0基準）へシフトさせます
+            // 縦書き見出しの移動
             gsap.timeline()
               .to("#hero-main-container", {
                 top: "140px",              
@@ -166,7 +159,6 @@
                 delay: 12.5
               });
 
-            // 下部スクロールメッセージは定位置でフェードアウト
             gsap.to("#scroll-text", {
                 opacity: 0,
                 duration: 1.0,
@@ -177,7 +169,6 @@
                 }
             });
 
-            // スクロールアニメーション（セクション2）
             gsap.to("#content-img", {
                 opacity: 1,
                 y: 0,
